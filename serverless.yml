@@ -1,11 +1,11 @@
 
 
-service: serverless-api-gateway-multi-stage-demo
+service: serverless-multistage
 
 ## This is where we setup env variables that will be set for different stages of lambda functions.
 custom:
-  dev_APP_STAGE='DEV STAGE'
-  prod_APP_STAGE='DEV STAGE'
+  dev_APP_STAGE: 'DEV STAGE'
+  prod_APP_STAGE: 'PROD STAGE'
 
 
 
@@ -14,6 +14,8 @@ provider:
   runtime: nodejs8.10
   environment:
     APP_STAGE: ${self:custom.${opt:stage, self:provider.stage}_APP_STAGE}
+
+
 
 
 
