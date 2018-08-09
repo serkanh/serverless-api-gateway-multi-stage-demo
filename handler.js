@@ -1,10 +1,11 @@
 'use strict';
 
 module.exports.hello = (event, context, callback) => {
+	let appStage = process.env.APP_STAGE
   const response = {
     statusCode: 200,
     body: JSON.stringify({
-      message: 'Go Serverless v1.0! Your function executed successfully!',
+      message: `Current lambda function env ${appStage}`,
       input: event,
     }),
   };
