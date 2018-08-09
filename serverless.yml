@@ -14,7 +14,51 @@ provider:
   runtime: nodejs8.10
   environment:
     APP_STAGE: ${self:custom.${opt:stage, self:provider.stage}_APP_STAGE}
+  variableSyntax: "\\${((?!stageVariables)[ ~:a-zA-Z0-9._'\",\\-\\/\\(\\)]+?)}"
+resources:
+  Resources:
+    ApiGatewayRestApi:
+      Type: AWS::ApiGateway::RestApi
+      Properties:
+        Name: ${self:service}
+        Body: ${file(swagger.yml)}
+    ApiGatewayDeploymentDev:
+      Type: AWS::ApiGateway::Deployment
+      Properties:
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Description: 'Dev deployment'
 
+    
+    ApiGatewayDeploymentProd:
+      Type: AWS::ApiGateway::Deployment
+      Properties:
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Description: 'Prod Deployment'
+
+    ApiGatewayStageDev:
+        Type: 'AWS::ApiGateway::Stage'
+        Properties:
+          StageName: dev
+          Description: Dev Stage
+          RestApiId: 
+            Ref: ApiGatewayRestApi
+          DeploymentId: 
+            Ref: ApiGatewayDeploymentDev
+          Variables:
+            "Stage": "dev"
+    ApiGatewayStageProd:
+        Type: 'AWS::ApiGateway::Stage'
+        Properties:
+          StageName: prod
+          Description: Prod Stage
+          RestApiId: 
+            Ref: ApiGatewayRestApi
+          DeploymentId: 
+            Ref: ApiGatewayDeploymentProd
+          Variables:
+            "Stage": "prod"
 
 
 
